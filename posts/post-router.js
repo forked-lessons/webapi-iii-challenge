@@ -64,4 +64,19 @@ router.delete("/posts/:id", async (req, res) => {
     res.status(500).json({ error: err });
   }
 });
+
+router.put("/posts/:id", async (req, res) => {
+  try {
+    const changes = req.body;
+    const id = req.params.id;
+    const post = await dbp.update(id, changes);
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({ message: "the post could not be found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
 module.exports = router;
