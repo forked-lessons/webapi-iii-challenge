@@ -30,7 +30,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const newPost = await req.body;
     if (newPost.text && newPost.user_id) {
@@ -47,7 +47,8 @@ router.post("", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const post = await dbp.remove(req.params.id);
+    const post = req.params.id;
+    await dbp.remove(req.params.id);
     res.status(200).json(post);
   } catch (err) {
     res.status(500).json({ error: err });
