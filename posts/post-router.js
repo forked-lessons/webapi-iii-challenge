@@ -7,30 +7,19 @@ const dbu = require("../users/userDb");
 //middleware
 
 //Routes
-router.get("/users/:id", (req, res) => {
-  const id = req.params.id;
-  dbu
-    .getUserPosts(id)
-    .then(user => {
-      res.status(200).json({ posts: user });
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
-});
 
-router.get("/posts", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await req.body;
     dbp.get().then(posts => {
       res.status(200).json({ posts: posts });
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ error: err });
   }
 });
 
-router.get("/posts/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const id = await req.params.id;
     dbp.getById(id).then(posts => {
@@ -41,7 +30,7 @@ router.get("/posts/:id", async (req, res) => {
   }
 });
 
-router.post("/posts", async (req, res) => {
+router.post("", async (req, res) => {
   try {
     const newPost = await req.body;
     if (newPost.text && newPost.user_id) {
@@ -56,7 +45,7 @@ router.post("/posts", async (req, res) => {
   }
 });
 
-router.delete("/posts/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const post = await dbp.remove(req.params.id);
     res.status(200).json(post);
@@ -65,7 +54,7 @@ router.delete("/posts/:id", async (req, res) => {
   }
 });
 
-router.put("/posts/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const changes = req.body;
     const id = req.params.id;
