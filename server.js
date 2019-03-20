@@ -9,5 +9,5 @@ server.use(express.json());
 server.get("/", (req, res) => {
   res.send("<h2>It's Working!!!</h2>");
 });
-server.use("/api/posts", postsRouter);
+server.use("/api", postsRouter);
 module.exports = server;

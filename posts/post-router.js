@@ -1,40 +1,36 @@
 const express = require("express");
 const router = express.Router();
 
-const db = require("./postDb");
+const dbp = require("./postDb");
+const dbu = require("../users/userDb");
 
-router.get("/", async (req, res) => {
-  const posts = await db.get(req.query);
-  if (posts) {
-    try {
-      res.status(200).json(posts);
-    } catch (error) {
-      console.log(error);
-      res
-        .status(500)
-        .json({ error: "There was an error while getting the posts." });
-    }
-  } else {
-    res.status(500).json({ error: "there was an error" });
-  }
-});
-router.post("/", async (req, res) => {
-  const newPost = req.body;
-  // if (user_id && newPost.text) {
-  try {
-    db.insert(newPost);
-    res.status(201).json(newPost);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      error: "There was an error while saving the post to the database"
+//middleware
+
+//Routes
+router.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+  dbu
+    .getUserPosts(id)
+    .then(user => {
+      res.status(200).json({ posts: user });
+    })
+    .catch(err => {
+      res.status(500).json(err);
     });
+});
+
+router.post("/", async (req, res) => {
+  try {
+    const newPost = await req.body;
+    if (newPost.text && newPost.user_id) {
+      dbp.insert(newPost).then(post => {
+        res.status(201).json(post);
+      });
+    } else {
+      res.status(400).json({ error: "error" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
-  // }
-  // else {
-  //   res.status(400).json({
-  //     errorMessage: "Please provide title and contents for the post."
-  //   });
-  // }
 });
 module.exports = router;
