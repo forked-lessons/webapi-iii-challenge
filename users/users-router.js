@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
 const dbu = require("./userDb");
-
+const formatting = require("../server");
 router.get("/", async (req, res) => {
   try {
     const users = await req.body;
